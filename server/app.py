@@ -19,5 +19,63 @@ db.init_app(app)
 def index():
     return "Index for Game/Review/User API"
 
+##return a list of all the games in the application 
+# @app.route('/games')
+# def games():
+
+#     games = []
+#     for game in Game.query.all():
+#         game_dict = {
+#             "title": game.title,
+#             "genre": game.genre,
+#             "platform": game.platform,
+#             "price": game.price
+
+#         }
+#         games.append(game_dict)
+
+#     response = make_response(
+#         jsonify(games),
+#         200
+#         # {"Content-Type": "application/json"} #not necessary bc we already have jsonify 
+#     )
+
+#     return response
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+#return specific game id so this would mean GET /games/10 for example 
+# @app.route('/games/<int:id>')
+# def game_by_id(id):
+#     game = Game.query.filter(Game.id == id).first()
+    
+#     game_dict = {
+#         "title": game.title,
+#         "genre": game.genre,
+#         "platform": game.platform,
+#         "price": game.price
+
+#     }
+
+#     response = make_response(
+#         game_dict,
+#         200        
+#     )
+
+#     return response
+
+##~~~~~~~~~~~~~~~~~~
+#now let's reconfigure games/<int:id> view to show reviews with our simple strategy using serializer
+@app.route('/games/<int:id>')
+def game_by_id(id):
+    game = Game.query.filter(Game.id == id).first()
+    
+    game_dict = game.to_dict()
+
+    response = make_response(
+        jsonify(game_dict),
+        200        
+    )
+    response.headers["Content-Type"] = "application/json"
+    
+    return response
 if __name__ == '__main__':
     app.run(port=5555, debug=True)
